@@ -25,6 +25,7 @@ public class ProjectService {
         try {
             Project p = projectRepository.findByProjectIdentifier(projectId.toUpperCase());
             project.setId(p.getId());
+            project.setProjectIdentifier(projectId.toUpperCase());
             return projectRepository.save(project);
         } catch (Exception e) {
             throw new ProjectIdException("Project ID '" + projectId.toUpperCase() + "' does not exist.");
