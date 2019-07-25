@@ -59,7 +59,8 @@ class UpdateProject extends Component {
       projectIdentifier: this.state.projectIdentifier,
       description: this.state.description,
       start_date: this.state.start_date,
-      end_date: this.state.end_date
+      end_date: this.state.end_date,
+      created_at: this.props.project.created_at
     };
     this.props.updateProject(updateProject, this.props.history);
   }
@@ -72,7 +73,7 @@ class UpdateProject extends Component {
         <div className="container">
           <div className="row">
             <div className="col-md-8 m-auto">
-              <h5 className="display-4 text-center">Update Project form</h5>
+              <h5 className="display-4 text-center">Update Project</h5>
               <hr />
               <form onSubmit={this.onSubmit}>
                 <div className="form-group">
