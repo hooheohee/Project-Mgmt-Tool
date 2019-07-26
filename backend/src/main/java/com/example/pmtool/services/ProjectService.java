@@ -38,7 +38,7 @@ public class ProjectService {
             project.setCreated_at(p.getCreated_at());
             return projectRepository.save(project);
         } catch (Exception e) {
-            throw new ProjectIdException("Project ID '" + projectId.toUpperCase() + "' does not exist.");
+            throw new ProjectIdException("Project '" + projectId.toUpperCase() + "' does not exist.");
         }
     }
 
