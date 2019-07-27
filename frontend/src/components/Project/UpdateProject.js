@@ -121,7 +121,11 @@ class UpdateProject extends Component {
                     type="date"
                     className="form-control form-control-lg"
                     name="start_date"
-                    value={this.state.start_date}
+                    value={
+                      this.state.start_date === null
+                        ? ""
+                        : this.state.start_date
+                    }
                     onChange={this.onChange}
                   />
                 </div>
@@ -131,7 +135,9 @@ class UpdateProject extends Component {
                     type="date"
                     className="form-control form-control-lg"
                     name="end_date"
-                    value={this.state.end_date}
+                    value={
+                      this.state.end_date !== null ? this.state.end_date : ""
+                    }
                     onChange={this.onChange}
                   />
                 </div>
