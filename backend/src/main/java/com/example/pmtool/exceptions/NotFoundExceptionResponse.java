@@ -2,17 +2,17 @@ package com.example.pmtool.exceptions;
 
 public class NotFoundExceptionResponse {
 
-    private String projectTaskSequence;
+    private String projectIdentifier;
 
     public NotFoundExceptionResponse(String projectIdentifier) {
-        this.projectTaskSequence = projectIdentifier;
+        this.projectIdentifier = projectIdentifier;
     }
 
     public String getProjectTaskSequence() {
-        return projectTaskSequence;
+        return projectIdentifier;
     }
 
     public void setProjectTaskSequence(String projectIdentifier) {
-        this.projectTaskSequence = projectIdentifier;
+        this.projectIdentifier = projectIdentifier;
     }
 }
