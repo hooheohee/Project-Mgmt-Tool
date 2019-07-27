@@ -56,3 +56,38 @@ export const getProjectTask = (
     history.push("/dashboard");
   }
 };
+
+export const updateProjectTask = (
+  backlog_id,
+  pt_id,
+  project_task,
+  history
+) => async dispatch => {
+  try {
+    await axios.put(`/api/backlog/${backlog_id}/${pt_id}`, project_task);
+    history.push(`/projectboard/${backlog_id}`);
+    dispatch({
+      type: GET_ERRORS,
+      payload: {}
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: error.response.data
+    });
+  }
+};
+
+export const deleteProjectTask = (backlog_id, pt_id) => async dispatch => {
+  if (
+    window.confirm(
+      `This will delete the project task ${pt_id}! Click OK to continue.`
+    )
+  ) {
+    await axios.delete(`/api/backlog/${backlog_id}/${pt_id}`);
+  }
+  dispatch({
+    type: DELETE_PROJECT_TASK,
+    payload: pt_id
+  });
+};

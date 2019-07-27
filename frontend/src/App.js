@@ -18,6 +18,7 @@ function App() {
       <Router>
         <div className="App">
           <Header />
+          <Route exact path="/" component={Dashboard} />
           <Route exact path="/dashboard" component={Dashboard} />
           <Route exact path="/addproject" component={AddProject} />
           <Route exact path="/updateproject/:id" component={UpdateProject} />
