@@ -17,63 +17,56 @@ import java.util.List;
 public class ProjectTaskService {
 
     @Autowired
-    private BacklogRepository backlogRepository;
-    @Autowired
     private ProjectTaskRepository projectTaskRepository;
     @Autowired
-    private ProjectRepository projectRepository;
+    private ProjectService projectService;
 
-    public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask) {
-        try {
-            Backlog backlog = backlogRepository.findByProjectIdentifier(projectIdentifier.toUpperCase());
-            projectTask.setBacklog(backlog);
-            Integer backlogSequence = backlog.getPTSequence() + 1;
-            backlog.setPTSequence(backlogSequence);
-            projectTask.setProjectSequence(projectIdentifier.toUpperCase() + "-" + backlogSequence);
-            projectTask.setProjectIdentifier(projectIdentifier.toUpperCase());
-            if (projectTask.getPriority() == null || projectTask.getPriority() == 0) {
-                projectTask.setPriority(3);
-            }
-            if (projectTask.getStatus() == null || projectTask.getStatus() == "") {
-                projectTask.setStatus("TO DO");
-            }
-            return projectTaskRepository.save(projectTask);
-        } catch (Exception e) {
-            throw new ProjectIdException("Project '" + projectIdentifier.toUpperCase() + "' does not exist.");
+    public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask, String username) {
+        Backlog backlog = projectService.findProjectByIdentifier(projectIdentifier, username).getBacklog();
+        projectTask.setBacklog(backlog);
+        Integer backlogSequence = backlog.getPTSequence() + 1;
+        backlog.setPTSequence(backlogSequence);
+        projectTask.setProjectSequence(projectIdentifier.toUpperCase() + "-" + backlogSequence);
+        projectTask.setProjectIdentifier(projectIdentifier.toUpperCase());
+        if (projectTask.getPriority() == null || projectTask.getPriority() == 0) {
+            projectTask.setPriority(3);
         }
+        if (projectTask.getStatus() == null || projectTask.getStatus() == "") {
+            projectTask.setStatus("TO DO");
+        }
+        return projectTaskRepository.save(projectTask);
     }
 
-    public Iterable<ProjectTask> findBacklogById(String backlog_id) {
-        Project project = projectRepository.findByProjectIdentifier(backlog_id);
-        if (project == null) {
-            throw new ProjectIdException("Project '" + backlog_id.toUpperCase() + "' does not exist.");
-        }
+    public Iterable<ProjectTask> findBacklogById(String backlog_id, String username) {
+        projectService.findProjectByIdentifier(backlog_id, username);
         return projectTaskRepository.findByProjectIdentifierOrderByPriority(backlog_id);
     }
 
-    public ProjectTask findPTbyProjectSequence(String backlog_id, String sequence) {
-        Backlog backlog = backlogRepository.findByProjectIdentifier(backlog_id);
-        if (backlog == null) {
-            throw new ProjectIdException("Project '" + backlog_id.toUpperCase() + "' does not exist.");
+    public ProjectTask findPTbyProjectSequence(String backlog_id, String pt_id, String username) {
+        projectService.findProjectByIdentifier(backlog_id, username);
+        ProjectTask projectTask = projectTaskRepository.findByProjectSequence(pt_id);
+        if (projectTask == null) {
+            throw new NotFoundException("Project task '" + pt_id.toUpperCase() + "' does not exist.");
         }
-        ProjectTask projectTask = projectTaskRepository.findByProjectSequence(sequence);
-        if(projectTask == null) {
-            throw new NotFoundException("Project task '" + sequence.toUpperCase() + "' does not exist.");
-        }
-        if(!projectTask.getProjectIdentifier().equalsIgnoreCase(backlog_id)) {
-            throw new NotFoundException("Project task '" + sequence.toUpperCase() + "' does not belong to Project '" + backlog_id.toUpperCase() +"'.");
+        if (!projectTask.getProjectIdentifier().equalsIgnoreCase(backlog_id)) {
+            throw new NotFoundException("Project task '" + pt_id.toUpperCase() + "' does not belong to Project '" + backlog_id.toUpperCase() + "'.");
         }
         return projectTask;
     }
 
-    public ProjectTask updateProjectTaskBySequence(ProjectTask projectTask, String backlog_id, String pt_id) {
-        ProjectTask pt = findPTbyProjectSequence(backlog_id, pt_id);
-        projectTask.setProjectSequence(pt_id);
+    public ProjectTask updateProjectTaskBySequence(ProjectTask projectTask, String backlog_id, String pt_id, String username) {
+        ProjectTask pt = findPTbyProjectSequence(backlog_id, pt_id, username);
+        projectTask.setProjectSequence(pt_id.toUpperCase());
+        projectTask.setId(pt.getId());
+        if(projectTask.getStatus()==null) projectTask.setStatus(pt.getStatus());
+        if(projectTask.getPriority()==null) projectTask.setPriority(pt.getPriority());
+        if(projectTask.getDueDate()==null) projectTask.setDueDate(pt.getDueDate());
+        if(projectTask.getProjectIdentifier()==null) projectTask.setProjectIdentifier(backlog_id.toUpperCase());
         return projectTaskRepository.save(projectTask);
     }
 
-    public void deletePTbyProjectSequence(String backlog_id, String pt_id) {
-        ProjectTask pt = findPTbyProjectSequence(backlog_id, pt_id);
+    public void deletePTbyProjectSequence(String backlog_id, String pt_id, String username) {
+        ProjectTask pt = findPTbyProjectSequence(backlog_id, pt_id, username);
         projectTaskRepository.delete(pt);
     }
 }
