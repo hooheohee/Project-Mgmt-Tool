@@ -4,15 +4,16 @@ import rootReducer from "./reducers";
 
 const initialsState = {};
 const middleware = [thunk];
-let store = {};
-if (window.navigator.userAgent.includes("Chrome")) {
+let store;
+const ReactReduxDevTools =
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
+if (window.navigator.userAgent.includes("Chrome") && ReactReduxDevTools) {
   store = createStore(
     rootReducer,
     initialsState,
     compose(
       applyMiddleware(...middleware),
-      window.__REDUX_DEVTOOLS_EXTENSION__ &&
-        window.__REDUX_DEVTOOLS_EXTENSION__()
+      ReactReduxDevTools
     )
   );
 } else {
@@ -22,4 +23,5 @@ if (window.navigator.userAgent.includes("Chrome")) {
     compose(applyMiddleware(...middleware))
   );
 }
+
 export default store;
