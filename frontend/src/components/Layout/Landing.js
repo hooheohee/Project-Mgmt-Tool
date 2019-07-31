@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+// import { connect } from "react-redux";
+// import PropTypes from "prop-types";
 
 class Landing extends Component {
-  componentDidMount() {
-    if (this.props.security.validToken) {
-      this.props.history.push("/dashboard");
-    }
-  }
+  // componentDidMount() {
+  //   if (this.props.security.validToken) {
+  //     this.props.history.push("/dashboard");
+  //   }
+  // }
 
   render() {
     return (
@@ -40,12 +40,13 @@ class Landing extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  security: state.security
-});
+// const mapStateToProps = state => ({
+//   security: state.security
+// });
 
-Landing.propTypes = {
-  security: PropTypes.object.isRequired
-};
+// Landing.propTypes = {
+//   security: PropTypes.object.isRequired
+// };
 
-export default connect(mapStateToProps)(Landing);
+export default Landing;
+// export default connect(mapStateToProps)(Landing);

@@ -31,7 +31,6 @@ class ProjectBoard extends Component {
     const { project_tasks } = this.props.backlog;
     const { errors } = this.state;
 
-    let boardContent;
     const boardAlgorithm = (errors, project_tasks) => {
       if (project_tasks.length < 1) {
         if (errors.projectIdentifier) {
@@ -52,8 +51,6 @@ class ProjectBoard extends Component {
       }
     };
 
-    boardContent = boardAlgorithm(errors, project_tasks);
-
     return (
       <div className="container">
         <Link to={`/addprojecttask/${id}`} className="btn btn-primary mb-3">
@@ -61,7 +58,7 @@ class ProjectBoard extends Component {
         </Link>
         <br />
         <hr />
-        {boardContent}
+        {boardAlgorithm(errors, project_tasks)}
       </div>
     );
   }
