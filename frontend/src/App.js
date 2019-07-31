@@ -18,19 +18,21 @@ import jwt_decode from "jwt-decode";
 import { SET_CURRENT_USER } from "./actions/types";
 import { logout } from "./actions/securityActions";
 import SecuredRoute from "./securityUtils/SecureRoute";
+import { setJwt } from "./securityUtils/setJwt";
 
 const jwt = localStorage.getItem("jwt");
 if (jwt) {
+  setJwt(jwt);
   const decoded = jwt_decode(jwt);
-  store.dispatch({
-    type: SET_CURRENT_USER,
-    payload: decoded
-  });
   const currentTime = Date.now() / 1000;
   if (decoded.exp < currentTime) {
     store.dispatch(logout());
     window.location.href = "/";
   }
+  store.dispatch({
+    type: SET_CURRENT_USER,
+    payload: decoded
+  });
 }
 
 function App() {
