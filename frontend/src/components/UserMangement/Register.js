@@ -35,7 +35,7 @@ class Register extends Component {
     this.props.createUser(newUser, this.props.history);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
     }
